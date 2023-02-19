@@ -5,10 +5,12 @@ import commentsRoute from "./routes/comments.js"
 import videosRoute from "./routes/videos.js"
 import usersRoute from "./routes/users.js"
 import authRouter from "./routes/auth.js"
+import cookieParser from "cookie-parser"
 
 const app = express()
 dotenv.config()
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("/api/comments",commentsRoute)
 app.use("/api/auth",authRouter)
