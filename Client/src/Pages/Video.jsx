@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import styled from 'styled-components'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -6,6 +6,8 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import Comments from '../Components/Comments';
 
 
 const Container = styled.div`
@@ -87,7 +89,9 @@ const Avatar = styled.img`
 `
 
 const Video = () => {
-  const { id } = useParams()  
+  const { id } = useParams() 
+  const [fillBtn , setfillBtn] = useState(false) 
+  const [fillBtnDislike , setfillBtnDislike] = useState(false) 
   return (
     <Container>
       <Content>
@@ -110,12 +114,22 @@ const Video = () => {
           </ChannelDetails>
           <Subscribe>Subscribe</Subscribe>
           <Buttons>
-            <Button><ThumbUpOffAltIcon />Like</Button>
-            <Button><ThumbDownOutlinedIcon />Dislike</Button>
+            <Button 
+              onClick={()=> { 
+                setfillBtn(!fillBtn)
+                if(fillBtnDislike) setfillBtnDislike(false)
+                }}>
+                {fillBtn ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}123</Button>
+            <Button 
+              onClick={()=> {
+                setfillBtnDislike(!fillBtnDislike)
+                if(fillBtn) setfillBtn(false)
+                }}>{fillBtnDislike ? <ThumbDownIcon /> : <ThumbDownOutlinedIcon />}Dislike</Button>
             <Button><ReplyOutlinedIcon />Share</Button>
             <Button><FileDownloadOutlinedIcon />Download</Button>
           </Buttons>
         </Details>
+        <Comments />
       </Content>
       <Recommendation>Recommended Section</Recommendation>
     </Container>

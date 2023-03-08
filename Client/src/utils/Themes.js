@@ -8,7 +8,7 @@ export const darkMode = {
 
 export const Lightmode = {
     bg : "#f9f9f9",
-    bgLighter : "white",
+    bgLighter : "#909090",
     text : "black",
     textSoft : "#606060",
     soft : "#f5f5f5"
