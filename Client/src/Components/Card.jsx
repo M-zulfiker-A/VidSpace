@@ -3,14 +3,19 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Container = styled.div`
-  margin-bottom : 3rem;
+  margin-bottom : ${(props)=> props.type === "sm" ? "1rem" :"3rem"};
   cursor : pointer;
+  display : ${(props)=> props.type === "sm" && "flex"};
+  align-items : ${(props)=> props.type === "sm" && "center"};
+  gap : ${(props)=> props.type === "sm" && "0.5rem"}
+
 `
 
 const Image  = styled.img`
-  width : 100%;
-  aspect-ratio : 1.7 / 1;
-  background-color:grey
+  width : ${(props)=> props.type === "sm" ? "50%" : "100%"};
+  aspect-ratio : 1.8 / 1;
+  background-color:grey;
+  border-radius : 0.3rem;
 `
 
 const Details =  styled.div`
@@ -23,7 +28,8 @@ const ChannelImage = styled.img`
   width : 2rem;
   height : 2rem;
   border-radius : 50%;
-  background-color :grey
+  background-color :grey;
+  display : ${(props)=> props.type === "sm" && "none"}
 `
 
 const Texts = styled.div`
@@ -45,13 +51,13 @@ const Info = styled.div`
 `;
 
 
-const Card = () => {
+const Card = ({type}) => {
   return (
     <Link to="/video/test">
-      <Container>
-        <Image />
+      <Container type={type}>
+        <Image type={type}/>
         <Details>
-          <ChannelImage src=""/>
+          <ChannelImage src="" type={type}/>
           <Texts>
             <Title>Learn by Doing</Title>
             <ChannelName>Z Learn</ChannelName>

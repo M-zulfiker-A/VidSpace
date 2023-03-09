@@ -38,6 +38,10 @@ const Items = styled.div`
     align-items:center;
     padding: 0.5rem;
     cursor : pointer;
+
+    &:hover{
+        background : ${({theme})=>theme.soft}
+    }
 `
 
 const Hr = styled.hr`

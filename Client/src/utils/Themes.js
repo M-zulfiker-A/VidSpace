@@ -11,6 +11,6 @@ export const Lightmode = {
     bgLighter : "#909090",
     text : "black",
     textSoft : "#606060",
-    soft : "#f5f5f5"
+    soft : "#f2f2f2"
 }
 

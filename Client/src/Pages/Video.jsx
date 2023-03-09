@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
+import Card from "../Components/Card"
 import styled from 'styled-components'
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
@@ -87,11 +88,30 @@ const Avatar = styled.img`
   height:2rem;
   width :2rem;
 `
+const Description = styled.div`
+  margin-top : 0.6rem;
+  margin-bottom : 0.6rem;
+  font-size : 0.8rem;
+  background-color : ${({theme})=> theme.soft};
+  padding : 0.5rem;
+  border-radius : 0.4rem;
+`
+const Desc = styled.div``
+const Views = styled.span`
+  font-weight: 600;
+`
+const PostedTime = styled.span`
+  margin-left : 0.5rem;
+  font-weight: 600;
+`
+
 
 const Video = () => {
   const { id } = useParams() 
   const [fillBtn , setfillBtn] = useState(false) 
-  const [fillBtnDislike , setfillBtnDislike] = useState(false) 
+  const [fillBtnDislike , setfillBtnDislike] = useState(false)
+  const [vidDescription , setvidDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores quibusdam voluptas repudiandae cupiditate corporis at? Ipsam quae eaque quis, eius repellendus, tenetur possimus provident saepe obcaecati, debitis facilis maiores?Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum, iusto maxime, tempore odio debitis amet nesciunt explicabo modi, error velit eligendi eius vero cum possimus! Dicta magnam quas omnis pariatur?")
+  const [showMore , setshowMore] = useState(true)
   return (
     <Container>
       <Content>
@@ -129,9 +149,25 @@ const Video = () => {
             <Button><FileDownloadOutlinedIcon />Download</Button>
           </Buttons>
         </Details>
+        <Description>
+          <Views>57k views</Views><PostedTime>3 hours ago</PostedTime>
+          <div>
+            {showMore ? vidDescription.slice(0,200)+"..." : vidDescription}
+            <div onClick={()=> setshowMore(!showMore)} style={{"cursor" : "pointer", "margin-top" : "0.5rem"}}>
+              Show {showMore ? "More" : "Less"}
+            </div>
+          </div>
+        </Description>
         <Comments />
       </Content>
-      <Recommendation>Recommended Section</Recommendation>
+      <Recommendation>
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+      </Recommendation>
     </Container>
   )
 }
