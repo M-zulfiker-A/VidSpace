@@ -19,7 +19,7 @@ const Avatar = styled.img`
 `
 const Input = styled.input`
     background-color : transparent;
-    border-bottom : 1px solid ${({theme})=> theme.bgLighter};
+    border-bottom : 1px solid grey;
     border-top : none;
     border-left : none;
     border-right : none;

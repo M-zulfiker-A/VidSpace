@@ -59,7 +59,7 @@ const SignInBtn = styled.button`
     color : #0440f4;
     font-weight: 400;
     align-items:center;
-    gap : 0.5rem
+    gap : 0.5rem;
 `
 
 const Title = styled.h2`
@@ -105,7 +105,9 @@ const Menu = ({isdarkMode , setisdarkMode }) => {
         <Hr />
         <Login>
             Sign in to Like , Share and Subscribe
-            <SignInBtn><AccountCircleIcon/>Sign In</SignInBtn>
+            <Link to="signin" style={{"textDecoration" : "none"}}>
+                <SignInBtn><AccountCircleIcon/>Sign In</SignInBtn>
+            </Link>
         </Login>
         <Hr />
         <Title>
