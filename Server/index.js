@@ -6,9 +6,11 @@ import videosRoute from "./routes/videos.js"
 import usersRoute from "./routes/users.js"
 import authRouter from "./routes/auth.js"
 import cookieParser from "cookie-parser"
+import cors from "cors"
 
 const app = express()
 dotenv.config()
+app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 

@@ -81,18 +81,24 @@ const Menu = ({isdarkMode , setisdarkMode }) => {
         <Link to='/'>
             <img src={Logo} alt="Logo" style={LogoClass}/>
         </Link>
-        <Items>
-            <HomeIcon />    
-            Home
-        </Items>
-        <Items>
-            <ExploreIcon />    
-            Explore
-        </Items>
-        <Items>
-            <SubscriptionsIcon />    
-            Subscription
-        </Items>
+        <Link to="/" style={{"textDecoration" : "none" , "color" : "inherit"}}>
+            <Items>
+                <HomeIcon />    
+                Home
+            </Items>
+        </Link>
+        <Link to="trends" style={{"textDecoration" : "none" , "color" : "inherit"}}>
+            <Items>
+                <ExploreIcon />    
+                Explore
+            </Items>
+        </Link>
+        <Link to="subscription" style={{"textDecoration" : "none" , "color" : "inherit"}}>
+            <Items>
+                <SubscriptionsIcon />    
+                Subscription
+            </Items>
+        </Link>
         <Hr />
         <Items>
             <VideoLibraryIcon />    

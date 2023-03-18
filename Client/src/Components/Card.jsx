@@ -1,13 +1,15 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import {format} from 'timeago.js'
 
 const Container = styled.div`
   margin-bottom : ${(props)=> props.type === "sm" ? "1rem" :"3rem"};
   cursor : pointer;
   display : ${(props)=> props.type === "sm" && "flex"};
   align-items : ${(props)=> props.type === "sm" && "center"};
-  gap : ${(props)=> props.type === "sm" && "0.5rem"}
+  gap : ${(props)=> props.type === "sm" && "0.5rem"};
 
 `
 
@@ -29,7 +31,7 @@ const ChannelImage = styled.img`
   height : 2rem;
   border-radius : 50%;
   background-color :grey;
-  display : ${(props)=> props.type === "sm" && "none"}
+  display : ${(props)=> props.type === "sm" && "none"};
 `
 
 const Texts = styled.div`
@@ -51,17 +53,30 @@ const Info = styled.div`
 `;
 
 
-const Card = ({type}) => {
+const Card = ({type , video}) => {
+  const [channel , setChannel] = useState({})
+  useEffect(()=>{
+    const fetchChannel = async (video)=>{
+      const channelData =  await axios.get(`http://localhost:8000/api/users/find/${video.userId}`)
+      console.log(channelData)
+      setChannel(channelData.data)
+    }
+    try{
+      fetchChannel(video)
+    }catch(err){
+      console.log(err)
+    }
+  },[video.userId])
   return (
-    <Link to="/video/test">
+    <Link to={`/video/${video._id}`}>
       <Container type={type}>
-        <Image type={type}/>
+        <Image type={type} src={video.imgUrl}/>
         <Details>
-          <ChannelImage src="" type={type}/>
+          <ChannelImage src={channel.img} type={type}/>
           <Texts>
-            <Title>Learn by Doing</Title>
-            <ChannelName>Z Learn</ChannelName>
-            <Info>My first Video for testing</Info>
+            <Title>{video.title}</Title>
+            <ChannelName>{channel.name}</ChannelName>
+            <Info>{video.views} views • {format(video.createdAt)}</Info>
           </Texts>
         </Details>
       </Container>

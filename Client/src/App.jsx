@@ -34,7 +34,9 @@ const App = () => {
             <Navbar />
             <Wrapper>
               <Routes>
-                <Route path="/" element = {<Home />} />
+                <Route index path="/" element = {<Home />} />
+                <Route path="/trends" element = {<Home type="trend" />} />
+                <Route path="/subscription" element = {<Home type="sub"/>} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/Video">
                   <Route path=":id" element = {<Video />} />

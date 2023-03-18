@@ -1,6 +1,7 @@
-import React from 'react'
+import React , {useState , useEffect}from 'react'
 import styled from 'styled-components'
 import Card from '../Components/Card'
+import axios from "axios"
 
 const Container = styled.div`
     display:grid;
@@ -10,66 +11,30 @@ const Container = styled.div`
 
 `
 
-const Home = () => {
+const Home = ({type = "random"}) => {
+  const [videos , setVideos] = useState([])
+
+  useEffect(() => {
+    const fetchVideos = async ()=>{
+      try {
+        const res = await axios.get(`http://localhost:8000/api/videos/${type}`)
+        console.log(res, typeof res)
+        setVideos(res.data.videos)
+      } catch (error) {
+        console.log(error)
+      }
+      
+    }
+    fetchVideos()
+  }, [type])
+  
+  
   return (
     
     <Container>
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+      {videos.length && videos.map((video)=>
+        (<Card video={video}/>)
+      )} 
     </Container>
   )
 }
