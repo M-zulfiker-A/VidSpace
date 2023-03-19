@@ -19,6 +19,7 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Container = styled.div`
     flex:1;
@@ -75,12 +76,13 @@ const Menu = ({isdarkMode , setisdarkMode }) => {
         width : "10rem",
         filter : `invert(${isdarkMode ? 0 : 0.97})`
     }
+    const {currentUser} = useSelector(state => state.user)
   return (
-    <Container className='menu-container'>
-    
+    <Container>
         <Link to='/'>
             <img src={Logo} alt="Logo" style={LogoClass}/>
         </Link>
+        <div className='scrollable'>
         <Link to="/" style={{"textDecoration" : "none" , "color" : "inherit"}}>
             <Items>
                 <HomeIcon />    
@@ -109,13 +111,20 @@ const Menu = ({isdarkMode , setisdarkMode }) => {
             History
         </Items>
         <Hr />
-        <Login>
-            Sign in to Like , Share and Subscribe
-            <Link to="signin" style={{"textDecoration" : "none"}}>
-                <SignInBtn><AccountCircleIcon/>Sign In</SignInBtn>
-            </Link>
-        </Login>
-        <Hr />
+        {
+            !currentUser && 
+            (
+                <>
+                    <Login>
+                        Sign in to Like , Share and Subscribe
+                        <Link to="signin" style={{"textDecoration" : "none"}}>
+                            <SignInBtn><AccountCircleIcon/>Sign In</SignInBtn>
+                        </Link>
+                    </Login>
+                    <Hr />
+                </>
+            )
+        }
         <Title>
             Best of VidSpace
         </Title>
@@ -159,6 +168,7 @@ const Menu = ({isdarkMode , setisdarkMode }) => {
             <WbIncandescentIcon />    
             { isdarkMode ? "Light Mode" : "Dark Mode"}
         </Items>
+    </div>
     </Container>
   )
 }

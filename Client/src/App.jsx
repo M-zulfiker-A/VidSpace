@@ -12,6 +12,7 @@ import SignIn from './Pages/SIgnIn';
 const Container = styled.div`
   display : flex;
   width : 100vw;
+  height : 100vh;
 `;
 
 const Wrapper = styled.div`
@@ -32,7 +33,7 @@ const App = () => {
           <Menu isdarkMode={isdarkMode} setisdarkMode={setisdarkMode} />
           <Main>
             <Navbar />
-            <Wrapper>
+            <Wrapper className='scrollableMain'>
               <Routes>
                 <Route index path="/" element = {<Home />} />
                 <Route path="/trends" element = {<Home type="trend" />} />
