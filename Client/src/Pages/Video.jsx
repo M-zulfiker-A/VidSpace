@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import Card from "../Components/Card"
 import styled from 'styled-components'
@@ -9,6 +9,10 @@ import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Comments from '../Components/Comments';
+import {useSelector , useDispatch} from "react-redux"
+import axios from 'axios';
+import { fetchStart , fetchSuccess , fetchFailure } from '../redux/videoSlicer';
+import { format } from 'timeago.js';
 
 
 const Container = styled.div`
@@ -107,11 +111,33 @@ const PostedTime = styled.span`
 
 
 const Video = () => {
+  const dispatch = useDispatch()
+  const {currentUser} = useSelector(state => state.user)
+  const {currentVideo} = useSelector(state=> state.video)
   const { id } = useParams() 
   const [fillBtn , setfillBtn] = useState(false) 
   const [fillBtnDislike , setfillBtnDislike] = useState(false)
-  const [vidDescription , setvidDescription] = useState("Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet asperiores quibusdam voluptas repudiandae cupiditate corporis at? Ipsam quae eaque quis, eius repellendus, tenetur possimus provident saepe obcaecati, debitis facilis maiores?Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum, iusto maxime, tempore odio debitis amet nesciunt explicabo modi, error velit eligendi eius vero cum possimus! Dicta magnam quas omnis pariatur?")
   const [showMore , setshowMore] = useState(true)
+  const [channel , setChannel] = useState({})
+
+  useEffect(() => {
+    try {
+      dispatch(fetchStart)
+      const fetchData = async()=>{
+        const Videores = await axios.get(`/api/videos/find/${id}`)
+        const Usersres = await axios.get(`/api/users/find/${Videores.data.video.userId}`)
+        console.log(Usersres)
+        setChannel(Usersres.data)
+        dispatch(fetchSuccess(Videores.data.video))
+      }
+      fetchData()
+    } catch (error) {
+      console.log(error)
+      dispatch(fetchFailure())
+    }
+
+  }, [])
+  
   return (
     <Container>
       <Content>
@@ -119,18 +145,18 @@ const Video = () => {
           <iframe
             width='100%'
             height='500rem'
-            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
-            frameborder = "0"
+            src={currentVideo.videoUrl}
+            frameBorder = "0"
             allow="accelerometer; autoplay; clipboard-write; encypted-media;  gyroscope; picture-in-picture"
             allowFullScreen
             />
         </VideoWrapper>
-        <Title>React Video Sharing App UI Design | Youtube UI Clone with React</Title>
+        <Title>{currentVideo.title}</Title>
         <Details>
-          <Avatar src="" alt="Avatar"/>
+          <Avatar src={channel.img} alt="Avatar"/>
           <ChannelDetails>
-            <ChannelName>Z Learn</ChannelName>
-            <ChannelInfo>123k Subscribers</ChannelInfo>
+            <ChannelName>{channel.name}</ChannelName>
+            <ChannelInfo>{channel.Subscribers} Subscribers</ChannelInfo>
           </ChannelDetails>
           <Subscribe>Subscribe</Subscribe>
           <Buttons>
@@ -139,7 +165,7 @@ const Video = () => {
                 setfillBtn(!fillBtn)
                 if(fillBtnDislike) setfillBtnDislike(false)
                 }}>
-                {fillBtn ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}123</Button>
+                {fillBtn ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}{currentVideo.likes}</Button>
             <Button 
               onClick={()=> {
                 setfillBtnDislike(!fillBtnDislike)
@@ -150,10 +176,10 @@ const Video = () => {
           </Buttons>
         </Details>
         <Description>
-          <Views>57k views</Views><PostedTime>3 hours ago</PostedTime>
+          <Views>{currentVideo.views} views</Views><PostedTime>{format(currentVideo.createdAt)}</PostedTime>
           <div>
-            {showMore ? vidDescription.slice(0,200)+"..." : vidDescription}
-            <div onClick={()=> setshowMore(!showMore)} style={{"cursor" : "pointer", "margin-top" : "0.5rem"}}>
+            {showMore ? currentVideo.desc.slice(0,200)+"..." : currentVideo.desc}
+            <div onClick={()=> setshowMore(!showMore)} style={{"cursor" : "pointer", "marginTop" : "0.5rem"}}>
               Show {showMore ? "More" : "Less"}
             </div>
           </div>
@@ -161,12 +187,12 @@ const Video = () => {
         <Comments />
       </Content>
       <Recommendation>
+        {/* <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
+        <Card type="sm" /> */}
       </Recommendation>
     </Container>
   )

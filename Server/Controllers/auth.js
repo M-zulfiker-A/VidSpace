@@ -33,3 +33,27 @@ export const signIn = async (req,res, next)=>{
         next(err)
     }
 }
+
+
+export const GoogleAuth =async(req, res, next)=>{
+    const {name , email , img} = req.body
+    try{
+        const user =await Users.findOne({email : email})
+        if(user){
+            res.cookie("access_token",token , {
+                httpOnly : true
+            }).status(200).json(user._doc)
+        }else{
+            const newUser =await Users.create({
+                ...req.body,
+                fromGoogle : true
+            })
+            const token = jwt.sign({id : newUser._id}, process.env.JWT)
+            res.cookie("access_token",token , {
+                httpOnly : true
+            }).status(200).json(newUser._doc)
+        }
+    }catch(err){
+        next(err)
+    }
+}

@@ -33,7 +33,7 @@ const Home = ({type = "random"}) => {
     
     <Container>
       {videos.length && videos.map((video)=>
-        (<Card video={video}/>)
+        (<Card key={video._id} video={video}/>)
       )} 
     </Container>
   )

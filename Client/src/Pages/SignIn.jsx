@@ -54,7 +54,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const dispatch = useDispatch()
-  const handleClick = async(e)=> {
+  const handleSignIn = async(e)=> {
       e.preventDefault();
       dispatch(loginStart())
       try{
@@ -82,6 +82,9 @@ const SignIn = () => {
       dispatch(loginFailure())
     }
   }
+  const handleSignUp = ()=>{
+    //todo : SIgnup
+  }
   return (
    <Container>
     <Wrapper>
@@ -89,7 +92,7 @@ const SignIn = () => {
       <p>Find your Space inside VidSpace</p>
       <Input placeholder='username' type='text' onChange={(e)=>setName(e.target.value)}/>
       <Input placeholder='password' type = 'password' onChange={(e)=>setPassword(e.target.value)}/>
-      <Buttons onClick={handleClick}>Sign In</Buttons>
+      <Buttons onClick={handleSignIn}>Sign In</Buttons>
       <p>Or</p>
       <Buttons onClick={signinWithGoogle}>Sign In With Google</Buttons>
       <p>Or</p>

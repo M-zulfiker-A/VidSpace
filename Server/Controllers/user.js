@@ -37,7 +37,9 @@ export const DeleteUser = async (req,res,next)=>{
 export const getUser = async (req,res,next)=>{
     try{
         const finduser = await Users.findById(req.params.id)
-        res.status(200).json(finduser)
+        const {password , ...userdetails} = finduser._doc
+        console.log(userdetails)
+        res.status(200).json(userdetails)
     }catch(err){
         next(err)
     }
