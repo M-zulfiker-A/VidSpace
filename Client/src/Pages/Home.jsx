@@ -17,7 +17,7 @@ const Home = ({type = "random"}) => {
   useEffect(() => {
     const fetchVideos = async ()=>{
       try {
-        const res = await axios.get(`http://localhost:8000/api/videos/${type}`)
+        const res = await axios.get(`/api/videos/${type}`)
         console.log(res, typeof res)
         setVideos(res.data.videos)
       } catch (error) {

@@ -40,6 +40,7 @@ export const GoogleAuth =async(req, res, next)=>{
     try{
         const user =await Users.findOne({email : email})
         if(user){
+            const token = jwt.sign({id : user._id}, process.env.JWT)
             res.cookie("access_token",token , {
                 httpOnly : true
             }).status(200).json(user._doc)

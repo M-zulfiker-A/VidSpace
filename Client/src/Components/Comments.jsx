@@ -1,5 +1,8 @@
-import React from 'react'
+import axios from 'axios'
+import React , {useState , useEffect} from 'react'
 import styled from 'styled-components'
+import Comment from './Comment'
+import { useSelector } from 'react-redux'
 
 const Container = styled.div`
 `
@@ -23,6 +26,7 @@ const Input = styled.input`
     border-top : none;
     border-left : none;
     border-right : none;
+    color : ${({theme})=> theme.text};
     width : 100%;
 
     &:focus{
@@ -33,12 +37,6 @@ const Input = styled.input`
 `
 const AllComments = styled.div`
     
-`
-const Comment = styled.div`
-    display : flex;
-    gap : 0.6rem;
-    margin-top : 0.7rem;
-    width : 100%;
 `
 
 const CommentBtns = styled.div`
@@ -51,6 +49,10 @@ const Cancelbtn = styled.button`
     all :unset;
     background-color : transparent;
     color : ${({theme})=> theme.text};
+
+    &:focus{
+        outline: none;
+    }
 `
 const Commentbtn = styled.button`
     all :unset;
@@ -59,71 +61,55 @@ const Commentbtn = styled.button`
     border-radius :1rem;
     padding : 0.4rem 0.7rem;
     font-weight : 600;
+
+    &:focus{
+        outline: none;
+    }
 `
-const CommentDetails = styled.div`
-    display: flex;
-    flex-direction : column;
-    gap : 0.3rem;
-`
-const CommenterName = styled.span`
-    font-size : 1rem;
-    font-weight: 600;
-    
-`
-const CommentDate = styled.span`
-    margin-left : 0.5rem;
-    color : ${({theme})=> theme.textSoft};
-    font-size : 0.75rem;
-`
+
 
 
 const Comments = () => {
+    const {currentUser} = useSelector(state => state.user)
+    const {currentVideo} = useSelector(state=> state.video)
+    const [allComment , setallComment ] = useState([])
+    const [newComment , setnewComment] = useState("")
+    const addComment =async()=>{
+        setnewComment("")
+        try {
+            const res = await axios.post(`/api/comments/`,{userId : currentUser._id , videoId : currentVideo._id , desc : newComment})
+            console.log("Commnet :",res.data)
+            setallComment([res.data.comments,...allComment])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+      try {
+        const fetchComments =async ()=>{
+            const res = await axios.get(`/api/comments/${currentVideo._id}`)
+            setallComment(res.data.comments.reverse())
+        }
+        fetchComments()
+      } catch (error) {
+        console.log(error)
+      }finally{
+        console.log(allComment.reverse())
+      }
+    }, [])
+    
   return (
     <Container>
         <NewComment>
-            <Avatar src="#"/>
-            <Input placeholder='Add a comment' />
+            <Avatar src={currentUser.img}/>
+            <Input placeholder='Add a comment' onChange={(e)=>(setnewComment(e.target.value))} value={newComment} />
         </NewComment>
         <CommentBtns>
-            <Cancelbtn>Cancel</Cancelbtn>
-            <Commentbtn>Comment</Commentbtn>
+            <Cancelbtn onClick={()=> setnewComment("")}>Cancel</Cancelbtn>
+            <Commentbtn onClick={addComment}>Comment</Commentbtn>
         </CommentBtns>
         <AllComments>
-            <Comment>
-                <Avatar src="" />
-                <CommentDetails>
-                    <div>
-                    <CommenterName>Test</CommenterName><CommentDate>8 months ago</CommentDate>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus officiis quibusdam iusto fuga voluptates! Facere, voluptate, provident, amet libero ad velit odit fuga nesciunt minus repellat voluptates aspernatur. Assumenda, officia.</p>
-                </CommentDetails>
-            </Comment>
-            <Comment>
-                <Avatar src="" />
-                <CommentDetails>
-                    <div>
-                    <CommenterName>Test</CommenterName><CommentDate>8 months ago</CommentDate>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus officiis quibusdam iusto fuga voluptates! Facere, voluptate, provident, amet libero ad velit odit fuga nesciunt minus repellat voluptates aspernatur. Assumenda, officia.</p>
-                </CommentDetails>
-            </Comment><Comment>
-                <Avatar src="" />
-                <CommentDetails>
-                    <div>
-                    <CommenterName>Test</CommenterName><CommentDate>8 months ago</CommentDate>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus officiis quibusdam iusto fuga voluptates! Facere, voluptate, provident, amet libero ad velit odit fuga nesciunt minus repellat voluptates aspernatur. Assumenda, officia.</p>
-                </CommentDetails>
-            </Comment><Comment>
-                <Avatar src="" />
-                <CommentDetails>
-                    <div>
-                    <CommenterName>Test</CommenterName><CommentDate>8 months ago</CommentDate>
-                    </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus officiis quibusdam iusto fuga voluptates! Facere, voluptate, provident, amet libero ad velit odit fuga nesciunt minus repellat voluptates aspernatur. Assumenda, officia.</p>
-                </CommentDetails>
-            </Comment>
-            
+            {allComment.length && allComment.map(comment => <Comment key={comment._id} comment={comment}/>)}          
         </AllComments>
     </Container>
   )

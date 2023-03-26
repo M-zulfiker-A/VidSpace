@@ -38,7 +38,6 @@ export const getUser = async (req,res,next)=>{
     try{
         const finduser = await Users.findById(req.params.id)
         const {password , ...userdetails} = finduser._doc
-        console.log(userdetails)
         res.status(200).json(userdetails)
     }catch(err){
         next(err)
@@ -100,7 +99,16 @@ export const unSubscribe = async (req,res,next)=>{
 export const like = async (req,res,next)=>{
     const videoId = req.params.videoId
     try {
-        await Video.findByIdAndUpdate(videoId,{
+        const video =await Video.findById(videoId)
+        if(video.likes.includes(req.user.id)){
+            await video.updateOne({
+                $pull : {likes : req.user.id}
+            })
+            res.status(200).json({
+                message : "Removed from Likes"
+            })
+        }
+        await video.updateOne({
             $addToSet : { likes : req.user.id },
             $pull : {dislikes : req.user.id}
         })
@@ -115,7 +123,16 @@ export const like = async (req,res,next)=>{
 export const dislike = async (req,res,next)=>{
     const videoId = req.params.videoId
     try {
-        await Video.findByIdAndUpdate(videoId,{
+        const video =await Video.findById(videoId)
+        if(video.dislikes.includes(req.user.id)){
+            await video.updateOne({
+                $pull : {dislikes : req.user.id}
+            })
+            res.status(200).json({
+                message : "Removed from disLikes"
+            })
+        }
+        await video.updateOne({
             $addToSet : { dislikes : req.user.id },
             $pull : {likes : req.user.id}
         })

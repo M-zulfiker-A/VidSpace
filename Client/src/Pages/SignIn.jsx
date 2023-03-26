@@ -58,7 +58,7 @@ const SignIn = () => {
       e.preventDefault();
       dispatch(loginStart())
       try{
-      const signinAction = await axios.post("http://localhost:8000/api/auth/signin",{
+      const signinAction = await axios.post("/api/auth/signin",{
         name , password
       })
       dispatch(loginSuccess(signinAction.data))

@@ -11,9 +11,11 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Comments from '../Components/Comments';
 import {useSelector , useDispatch} from "react-redux"
 import axios from 'axios';
-import { fetchStart , fetchSuccess , fetchFailure } from '../redux/videoSlicer';
+import { fetchStart , fetchSuccess , fetchFailure , like, dislike } from '../redux/videoSlicer';
 import { format } from 'timeago.js';
+import { subscription, unsubscription } from '../redux/userSlicer';
 
+axios.defaults.withCredentials = true;
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +62,10 @@ const Button = styled.button`
   padding : 0.3rem 0.7rem;
   gap : 0.2rem;
 
+  &:focus{
+    outline : none;
+  }
+
 `
 const ChannelDetails =styled.div`
   display:flex;
@@ -77,6 +83,7 @@ const ChannelInfo = styled.div`
 
 const Subscribe = styled.button`
   all: unset;
+  cursor:pointer;
   background-color : ${({theme})=> theme.text};
   color : ${({theme})=> theme.bg};
   border-radius :1rem;
@@ -84,6 +91,9 @@ const Subscribe = styled.button`
   font-weight : 600;
   margin-left: 1rem;
   
+  &:focus{
+    outline : none;
+  }
 `
 
 const Avatar = styled.img`
@@ -108,6 +118,11 @@ const PostedTime = styled.span`
   margin-left : 0.5rem;
   font-weight: 600;
 `
+const VideoFrame = styled.video`
+  max-height : 720px;
+  width : 100%;
+  object-fit : cover;
+`
 
 
 const Video = () => {
@@ -115,10 +130,30 @@ const Video = () => {
   const {currentUser} = useSelector(state => state.user)
   const {currentVideo} = useSelector(state=> state.video)
   const { id } = useParams() 
-  const [fillBtn , setfillBtn] = useState(false) 
-  const [fillBtnDislike , setfillBtnDislike] = useState(false)
   const [showMore , setshowMore] = useState(true)
   const [channel , setChannel] = useState({})
+  const [videoVisible, setvideoVisible] = useState(false)
+
+  const handleLike =async()=> {
+    await axios.put(`/api/users/like/${currentVideo._id}`)
+    dispatch(like(currentUser._id))
+  }
+  const handleDislike =async()=> {
+    await axios.put(`/api/users/dislike/${currentVideo._id}`)
+    dispatch(dislike(currentUser._id))
+  }
+
+  const handleSub =async()=>{
+    if(currentUser.SubscribedUsers.includes(channel._id)){
+      await axios.put(`/api/users/unsub/${channel._id}`)
+      dispatch(unsubscription(channel._id))
+    }else{
+      await axios.put(`/api/users/sub/${channel._id}`)
+      console.log(currentUser.SubscribedUsers)
+
+      dispatch(subscription(channel._id))
+    }
+  }
 
   useEffect(() => {
     try {
@@ -134,22 +169,19 @@ const Video = () => {
     } catch (error) {
       console.log(error)
       dispatch(fetchFailure())
+    }finally{
+      console.log(currentVideo)
     }
 
-  }, [])
+  }, [id, dispatch])
   
+  
+
   return (
     <Container>
       <Content>
         <VideoWrapper>
-          <iframe
-            width='100%'
-            height='500rem'
-            src={currentVideo.videoUrl}
-            frameBorder = "0"
-            allow="accelerometer; autoplay; clipboard-write; encypted-media;  gyroscope; picture-in-picture"
-            allowFullScreen
-            />
+          {!videoVisible ? (<img onClick={()=>setvideoVisible(true)} src={currentVideo.imgUrl} />) : (<VideoFrame src={currentVideo.videoUrl} controls={true} autoPlay={true} />)}
         </VideoWrapper>
         <Title>{currentVideo.title}</Title>
         <Details>
@@ -158,19 +190,13 @@ const Video = () => {
             <ChannelName>{channel.name}</ChannelName>
             <ChannelInfo>{channel.Subscribers} Subscribers</ChannelInfo>
           </ChannelDetails>
-          <Subscribe>Subscribe</Subscribe>
+          <Subscribe onClick={handleSub}>{currentUser.SubscribedUsers?.includes(channel._id) ? "Unsubscribe" : "Subscribe"}</Subscribe>
           <Buttons>
             <Button 
-              onClick={()=> { 
-                setfillBtn(!fillBtn)
-                if(fillBtnDislike) setfillBtnDislike(false)
-                }}>
-                {fillBtn ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}{currentVideo.likes}</Button>
+              onClick={handleLike}>
+                {currentVideo.likes.includes(currentUser._id) ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}{currentVideo.likes?.length } Likes</Button>
             <Button 
-              onClick={()=> {
-                setfillBtnDislike(!fillBtnDislike)
-                if(fillBtn) setfillBtn(false)
-                }}>{fillBtnDislike ? <ThumbDownIcon /> : <ThumbDownOutlinedIcon />}Dislike</Button>
+              onClick={handleDislike}>{currentVideo.dislikes.includes(currentUser._id) ? <ThumbDownIcon /> : <ThumbDownOutlinedIcon />}Dislike</Button>
             <Button><ReplyOutlinedIcon />Share</Button>
             <Button><FileDownloadOutlinedIcon />Download</Button>
           </Buttons>

@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState ={
     currentVideo : null,
     loading : false,
-    error : false
+    error : false,
 }
 
 export const videoSlice =createSlice({
@@ -21,9 +21,25 @@ export const videoSlice =createSlice({
             state.error = true
             state.loading = false
         },
+        like : (state, action) => {
+            if(!state.currentVideo.likes.includes(action.payload)){
+                state.currentVideo.likes.push(action.payload);
+                state.currentVideo.dislikes.splice(state.currentVideo.dislikes.findIndex(userId => userId === action.payload) , 1)
+            }else{
+                state.currentVideo.likes.splice(state.currentVideo.likes.findIndex(userId => userId === action.payload) , 1)
+            }
+        },
+        dislike : (state, action) => {
+            if(!state.currentVideo.dislikes.includes(action.payload)){
+                state.currentVideo.dislikes.push(action.payload);
+                state.currentVideo.likes.splice(state.currentVideo.likes.findIndex(userId => userId === action.payload) , 1)
+            }else{
+                state.currentVideo.dislikes.splice(state.currentVideo.dislikes.findIndex(userId => userId === action.payload) , 1)
+            }
+        },
     }
 })
 
-export const {fetchFailure , fetchStart , fetchSuccess} = videoSlice.actions
+export const {fetchFailure , fetchStart , fetchSuccess ,  like , dislike} = videoSlice.actions
 
 export default videoSlice.reducer
