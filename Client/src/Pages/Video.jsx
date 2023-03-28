@@ -123,6 +123,11 @@ const VideoFrame = styled.video`
   width : 100%;
   object-fit : cover;
 `
+const ThumbNail = styled.img`
+  max-height : 720px;
+  width : 100%;
+  object-fit : cover;
+`
 
 
 const Video = () => {
@@ -181,7 +186,7 @@ const Video = () => {
     <Container>
       <Content>
         <VideoWrapper>
-          {!videoVisible ? (<img onClick={()=>setvideoVisible(true)} src={currentVideo.imgUrl} />) : (<VideoFrame src={currentVideo.videoUrl} controls={true} autoPlay={true} />)}
+          {!videoVisible ? (<ThumbNail onClick={()=>setvideoVisible(true)} src={currentVideo.imgUrl} />) : (<VideoFrame src={currentVideo.videoUrl} controls={true} autoPlay={true} />)}
         </VideoWrapper>
         <Title>{currentVideo.title}</Title>
         <Details>

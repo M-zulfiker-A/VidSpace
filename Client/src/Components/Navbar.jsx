@@ -2,7 +2,7 @@ import React , {useState} from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import Videoupload from './Videoupload';
@@ -45,6 +45,11 @@ gap : 0.5rem;
 const Input = styled.input`
 border : none;
 background-color : transparent;
+color : ${({theme})=> theme.text};
+
+&:focus{
+    outline : none
+}
 `
 const User = styled.div`
 display: flex;
@@ -59,11 +64,12 @@ height:2rem;
 width :2rem;
 `
 const Navbar = () => {
+    const navigate = useNavigate()
     const {currentUser} = useSelector((state)=>state.user)
     const [showModal , setshowModal] = useState(false)
+    const [q,setQ] = useState("")
     const handleUpload =()=>{
         setshowModal(true)
-
     }
 
     return (
@@ -71,8 +77,8 @@ const Navbar = () => {
             <Container>
                 <Wrapper>
                     <Search>
-                        <Input placeholder='Search' />
-                        <SearchIcon />
+                        <Input placeholder='Search' onChange={e=> setQ(e.target.value)}/>
+                        <SearchIcon onClick={()=>(navigate(`/search?q=${q}`))}/>
                     </Search>
                     {currentUser ? 
                         <User>

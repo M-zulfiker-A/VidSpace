@@ -102,7 +102,7 @@ export const subbedVideos = async(req,res,next)=>{
         const videosList =  await Promise.all(
             subbedChannels.map(channel => Video.find({userId : channel}))
         )
-        res.status(200).json(videosList.flat().sort((a,b)=> b.createdAt - a.createdAt))
+        res.status(200).json({videos :videosList.flat().sort((a,b)=> b.createdAt - a.createdAt)})
     } catch (error) {
         next(error)
     }
