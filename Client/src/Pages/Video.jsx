@@ -14,6 +14,7 @@ import axios from 'axios';
 import { fetchStart , fetchSuccess , fetchFailure , like, dislike } from '../redux/videoSlicer';
 import { format } from 'timeago.js';
 import { subscription, unsubscription } from '../redux/userSlicer';
+import Recommendation from '../Components/Recommendation';
 
 axios.defaults.withCredentials = true;
 
@@ -27,10 +28,6 @@ const Content = styled.div`
 
 const VideoWrapper = styled.div`
   
-`
-
-const Recommendation = styled.div`
-  flex:2;
 `
 
 const Title = styled.h1`
@@ -217,14 +214,7 @@ const Video = () => {
         </Description>
         <Comments />
       </Content>
-      <Recommendation>
-        {/* <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" /> */}
-      </Recommendation>
+      <Recommendation tags={currentVideo.tags}/>
     </Container>
   )
 }

@@ -109,7 +109,7 @@ const Comments = () => {
             <Commentbtn onClick={addComment}>Comment</Commentbtn>
         </CommentBtns>
         <AllComments>
-            {allComment.length && allComment.map(comment => <Comment key={comment._id} comment={comment}/>)}          
+            {allComment.length ? allComment.map(comment => <Comment key={comment._id} comment={comment}/>) : <></>}          
         </AllComments>
     </Container>
   )
